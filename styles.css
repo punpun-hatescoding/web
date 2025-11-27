@@ -1,107 +1,1575 @@
+/* style2.css */
+
+/* 
+Z-INDEX LAYERING STRATEGY:
+0 - outerframe (bottom)
+1 - innerframe
+2 - redframe, window, animated-curtain
+3 - title, lighting
+4 - main-char
+5 - mist, main-heart
+6 - ambience (top)
+10+ - overlays (e.g., flashlight effect)
+Adjust and document new layers as needed for future elements.
+*/
+
+/* 1. GLOBAL STYLES AND FONT IMPORT */
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap");
+
+html,
 body {
-  background-color: #263728;
   margin: 0;
   padding: 0;
   width: 100%;
+  min-height: 100vh;
+  background-color: #2b322c;
+  /* This stops horizontal scrollbars (note: overflow-x: hidden may also hide legitimate overflows, so use with caution) */
+  overflow-x: hidden;
+  font-family: "EB Garamond", serif;
 }
 
-.content-wrapper {
-  /* FIX: Removed 'display: flex', 'justify-content', and 'align-items' 
-    as they don't affect absolutely positioned children.
-  */
-  position: relative; /* This acts as the anchor for all the absolute frames */
+#bg-music {
+  display: none; /* Hide the audio element */
+  /* Volume cannot be controlled via CSS. Use JavaScript instead:
+     document.getElementById('bg-music').volume = 0.3; */
+}
+#music-box {
+  position: fixed;
+  top: 43vh;
+  left: -22vw;
+  width: 100vh;
+  height: 100vh; 
+  scale: 0.25;
+  background-image: url(elements/music-box.gif);
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  opacity: 1;
+  z-index: 50; /* Above all content */
+  pointer-events: auto;
+  animation: subtlePulse 3s ease-in-out infinite;
+}
+
+#music-box.paused {
+    opacity: 0.4; /* Dim the box to show it's inactive */
+    mix-blend-mode: hard; /* Turn it black and white */
+}
+@keyframes subtlePulse {
+    0% { filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)); }
+    50% { filter: drop-shadow(0 0 55px rgba(255, 0, 0, 0.6)); }
+    100% { filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0)); }
+}
+#outerframe,
+#innerframe,
+#redframe,
+#title {
+  position: absolute;
+  width: 100vw;
   height: 100vh;
-  max-width: 1920px;
-
-  /* FIX: Changed margins to 'auto' to center the wrapper */
-  margin-left: auto;
-  margin-right: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* This centers the element */
+  /* This ensures all background images are centered and contained */
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
-
-.main-title-container {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    max-width: 1920px;
-    display: block;
+.author-name {
+  position: absolute;
+  top: 65vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 2rem;
+  color: #949786;
+  opacity: 1;
+  z-index: 4; /* Above frames but below main content */
 }
+/* 3. Apply Individual Images and Stacking */
 
 #outerframe {
-  position: relative;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 1080px;
   background-image: url(elements/outerframe.png);
-  background-size: contain;
-  background-repeat: no-repeat; /* Added for consistency */
-  z-index: 0; /* This is the bottom layer, correct. */
+  z-index: 0; /* Bottom layer */
+  background-size: cover;
 }
 
 #innerframe {
-  /* FIX: Changed to 'absolute' to stack correctly */
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  /* FIX: Changed to '100vh' (viewport height) */
-  height: 1080px; 
-  flex-shrink: 0;
   background-image: url(elements/innerframe.png);
-  background-size: contain;
-  transform: scale(0.9);
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1; /* Stacks on top of outerframe, correct. */
+  z-index: 1; /* Sits on top of outerframe */
+  transform: translate(-50%, -50%) scale(0.9, 0.95);
 }
 
 #redframe {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  flex-shrink: 0;
   background-image: url(elements/red-frame.png);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  scale: 0.95;
-  z-index: 2; /* Stacks on top of innerframe, correct. */
+  z-index: 2; /* Sits on top of innerframe */
+  transform: translate(-50%, -50%) scale(0.95); /* Centered and 95% scale */
 }
 
 #title {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
-  flex-shrink: 0;
   background-image: url(elements/title-typo.svg);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  scale: 0.7;
-  z-index: 2; /* Stacks at the same level as redframe, correct. */
+  z-index: 3; /* Top layer */
+  transform: translate(-50%, -50%) scale(0.7); /* 70% scale */
 }
 
-/* This section is for your second "page" below the fold. */
-/* This positioning looks correct for a scrolling site. */
+/* This is for your second page, which we will add later.
+   We make it sit 100vh (1 full screen height) below the top.
+*/
+
 .frame1-container {
   position: absolute;
-  top: 100vh;
-  left: 0px;
-  max-width: 1920px;
+  top: calc(100vh - 10px); /* Starts after the first screen ends */
+  left: 0;
+  width: 100vw;
   height: 100vh;
+  background-color: transparent;
+  overflow: hidden;
 }
+/* ===== FRAME 1: INTRODUCTORY TEXT ===== */
 
-#background-frame1 {
+
+#window {
   position: absolute;
   width: 100vw;
   height: 100vh;
-  flex-shrink: 0;
   background-image: url(elements/window.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+}
+#main-char {
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  /* FIX: Add translateX(-50%) BEFORE scale(0.9) */
+  /* Rest of your code is fine... */
   background-size: contain;
   background-repeat: no-repeat;
-  z-index: 3;
+
+  background-image: url(elements/main-char.png);
+  z-index: 4;
+  animation: subtlePulse1 1.8s ease-in-out infinite;
 }
+@keyframes subtlePulse1 {
+    0%, 100% { filter: hue-rotate(30deg) contrast(130%); }
+    50%, 75% { filter: none; }
+}
+.animated-curtain {
+  position: absolute;
+  left: -75%; /* Starting point */
+  bottom: 13vh;
+  width: 100%;
+  height: 100%;
+  scale: 2.5;
+  background-image: url(elements/curtain-animated.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
+  z-index: 5;
+
+  /* --- ANIMATION SETTINGS --- */
+  /* Name | Duration | Timing | Delay | Iteration | Direction */
+  animation: curtainLoop 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Define the movement here */
+@keyframes curtainLoop {
+  0% {
+    left: -85%; /* Start position */
+  }
+  100% {
+    left: -100%; /* End position (Adjust this to move it further/closer) */
+  }
+}
+#mist {
+  position: absolute;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  scale: 1.2;
+  background-image: url(elements/mist.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.text-f1-vision,
+.text-f1-understood,
+.text-f1-glimpses {
+  position: absolute; /* Provisional vertical position; adjust as needed */
+  left: 8vw; /* Provisional horizontal position; adjust as needed */
+  font-family: "EB Garamond", serif;
+  font-size: 2rem; /* Unified per earlier global directive */
+  line-height: 1.05;
+  opacity: 1;
+  letter-spacing: -0.5px;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9; /* Above imagery, consistent with other text */
+  white-space: nowrap;
+}
+
+.text-f1-vision {
+  top: 8vh;
+  font-weight: 500;
+}
+.text-f1-understood {
+  top: 18vh;
+  font-weight: 500;
+}
+.text-f1-glimpses {
+  top: 28vh;
+  left: 20vw;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Emphasized words within first two lines */
+.text-f1-vision .em,
+.text-f1-understood .em,
+.text-f1-glimpses .em {
+  font-style: italic;
+  font-weight: 700;
+  color: #bb0009; /* Keep same color; weight/style provide emphasis */
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  display: inline-block;
+  animation: subtlePulse1 2s ease-in-out infinite;
+}
+
+.text-f1-vision .em:hover {
+  transform: rotate(10deg) scale(1.5);
+}
+.text-f1-understood .em:hover {
+  transform: rotate(10deg) scale(1.5);
+}
+.text-f1-glimpses .em:hover {
+  transform: rotate(10deg) scale(1.5);
+}
+
+#scene-a,
+#scene-b {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* No z-index needed here, the inner elements (char, window) have their own */
+  /* VISUAL STATE */
+  opacity: 1; /* Visible by default */
+
+  /* THE ANIMATION LOGIC */
+  /* This says: "Whenever opacity changes, take 2 seconds to do it smoothly" */
+  transition: opacity 2s ease-in;
+}
+.hidden {
+  opacity: 0 !important;
+
+  /* IMPORTANT: This prevents clicking on the scene while it is invisible */
+  pointer-events: none;
+}
+
+#scene-b p {
+  white-space: nowrap;
+}
+#texture-overlay-f1b {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(elements/texture-overlay-f1.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none; /* Pure visual layer */
+  z-index: 22; /* Below text (9) but above base ambience (7 earlier) */
+}
+#main-char-f1b {
+  position: absolute;
+  bottom: 7vh;
+  left: 65%;
+  width: 100%;
+  height: 100%;
+  background-image: url(elements/main-char-f1b.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  scale: 1.5;
+  z-index: 20;
+}
+#windows-f1b {
+  position: absolute;
+  top: 15vh;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(elements/elements-f1b.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  scale: 1.3;
+  z-index: 21;
+}
+#mist-f1b {
+  position: absolute;
+  top: 23vh;
+  left: 35%;
+  width: 100%;
+  height: 100%;
+  scale: 0.7;
+  background-image: url(elements/mist-f1b.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 21;
+  pointer-events: none;
+}
+/* ===== SCENE B TEXT (Figma nodes 77-361, 75-288, 75-196, 75-195, 77-293) ===== */
+.text-f1b-autumn,
+.text-f1b-she-stands,
+.text-f1b-nude1,
+.text-f1b-i-called,
+.text-f1b-nudes {
+  position: absolute;
+  left: 10vw; /* provisional horizontal placement */
+  font-family: "EB Garamond", serif;
+  font-size: 2rem; /* unified size per global directive */
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 22; /* above character/window in scene-b */
+  mix-blend-mode: normal; /* adjust later if needed */
+  opacity: 1;
+}
+
+.text-f1b-i-called {
+  top: 38vh;
+  left: 35%;
+  font-weight: 500;
+}
+.text-f1b-nudes {
+  top: 48vh;
+  left: 50%;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  color:#bb0009;
+}
+.text-f1b-nude1 {
+  top: 58vh;
+  left: 20%;
+  font-weight: 700;
+  font-size: 2rem;
+}
+.text-f1b-she-stands {
+  top: 68vh;
+  left: 60%;
+  font-weight: 500;
+}
+.text-f1b-autumn {
+  top: 78vh;
+  font-weight: 500;
+}
+
+/* Highlight spans inside Scene B */
+.text-f1b-nude1 .hi-white {
+  font-weight: 700;
+  font-style: italic;
+  color:#bb0009
+}
+.text-f1b-nude1 .hi-red {
+  font-weight: 700;
+  font-style: italic;
+  color: #bb0009;
+}
+.text-f1b-nude1 .rest {
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* --- FLASHLIGHT EFFECT STYLES --- */
+#flashlight-wrapper {
+  /* Crucial: Must NOT have a background color that hides the body image */
+  background-color: transparent;
+
+  /* Ensure the text color is dark so it is readable against the revealed image */
+  color: rgb(53, 18, 18);
+  opacity: 0.35;
+  position: fixed;
+  width: 100vw;
+  height: 200vh;
+  z-index: 30;
+  pointer-events: none;
+  /* ... keep position: fixed, width: 100vw, etc. ... */
+}
+
+/* --- 3. The Light Beam Overlay (The Darkness) --- */
+#flashlight-wrapper::before {
+  content: "";
+  display: block;
+  width: 100vw;
+  height: 200vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  /* FIX: Invert the radial gradient! */
+  background: radial-gradient(
+    circle 450px at var(--mouse-x) var(--mouse-y),
+    rgba(255, 160, 160, 0) 7%,
+    /* Center: Fully Transparent (Reveals Image) */ rgb(0, 0, 0) 80%
+      /* Edge: Mostly Black (Hides Image) */
+  );
+
+  pointer-events: none;
+  z-index: 30;
+}
+:root {
+  --screen-count-before-frame2: 2;
+}
+
+.frame2345-container {
+  position: absolute;
+  top: calc(
+    200vh - 10px
+  ); /* Starts after the first two screens (i.e., at the start of the third screen) */
+  left: 0;
+  min-width: 100vw;
+  height: 600vh;
+  background-size: cover;
+  background-color: transparent;
+  overflow: hidden;
+  z-index: 4;
+  border-radius: 15px;
+}
+#scene2a,
+#scene2b {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  transition: opacity 0.7s mix-blend-mode ease-in;
+}
+
+.hidden2 {
+  opacity: 0 !important;
+  /* IMPORTANT: This prevents clicking on the scene while it is invisible */
+  pointer-events: none;
+}
+/*scene2a*/
+#main-heart {
+  position: absolute;
+  top: 20vh;
+  width: 100vw;
+  height: 100vh;
+  left: 17%;
+  transform: scale(0.65);
+  /* Background image replaced by video; keep as fallback */
+  background-image: url(elements/main-heart.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 6;
+  animation: heartBeat 0.7s ease-in-out infinite;
+}
+#main-heart:hover {
+ filter: drop-shadow(0 10px 25px rgb(241, 78, 45));
+}
+/* Heart video fills container, inherits scaling via parent animation */
+@keyframes heartBeat {
+  0%,
+  75% {
+    transform: scale(0.65);
+  }
+  50%,
+  100% {
+    transform: scale(0.68);
+  }
+}
+/*#main-heart:hover {
+    animation-play-state: paused;
+}*/
+#ambience {
+  position: absolute;
+  width: 100vw;
+  height: 200vh;
+  background-image: url(elements/ambience.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  mix-blend-mode: lighten;
+  opacity: 0.5;
+  z-index: 7;
+  pointer-events: none;
+}
+/*scene2b*/
+#left-heart {
+  position: absolute;
+  top: 25vh;
+  width: 100vw;
+  height: 100vh;
+  left: 19%;
+  transform: scale(0.6) rotate(15deg);
+  background-image: url(elements/left-heart.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 9;
+  filter: drop-shadow(5px 5px 10px #ffeeef) brightness(1.3);
+  animation: heartBrokenL 0.1s 0.5s forwards;
+}
+@keyframes heartBrokenL {
+  0% {
+    left: 12%;
+  }
+  100% {
+    left: 2%;
+  }
+}
+#right-heart {
+  position: absolute;
+  top: 22vh;
+  width: 100vw;
+  height: 100vh;
+  left: 25%;
+  transform: scale(0.65) rotate(15deg);
+  background-image: url(elements/right-heart.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 9;
+  filter: drop-shadow(5px 5px 10px #ffffff) brightness(1.6);
+  animation: heartBrokenR 0.1s 0.5s forwards;
+}
+@keyframes heartBrokenR {
+  0% {
+    left: 18%;
+  }
+  100% {
+    left: 31%;
+  }
+}
+#polaroids {
+  position: absolute;
+  top: 16vh;
+  width: 100vw;
+  height: 100vh;
+  left: 57%;
+  transform: translateX(-50%) scale(0.45);
+  background-image: url(elements/polaroids.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 7;
+  animation: polaroidFloat 3s ease-in-out infinite alternate;
+}
+@keyframes polaroidFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) scale(0.45);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-2vh) scale(0.45);
+  }
+}
+#string {
+  position: absolute;
+  top: 16vh;
+  width: 100vw;
+  height: 100vh;
+  scale: 0.1;
+  left: 2%;
+  background-image: url(elements/string.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 6;
+  animation: string 0.1s 0.5s forwards;
+}
+@keyframes string {
+  0% {
+    scale: 0.1;
+  }
+  100% {
+    scale: 0.55;
+  }
+}
+
+/* ===== SCENE 2B TEXT STYLES (Figma nodes 75-211,75-289,75-212,75-290,77-406) ===== */
+.text-f2b-heart-snap,
+.text-f2b-floated,
+.text-f2b-hand-1,
+.text-f2b-hand-2,
+.text-f2b-moved-back {
+  position: absolute;
+  left: 12vw; /* provisional horizontal placement */
+  font-family: "EB Garamond", serif;
+  font-size: 2rem; /* unified size */
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 8; /* Above hearts (7) */
+  white-space: nowrap;
+}
+.text-f2b-heart-snap {
+  top: 110vh;
+  left: 8vw;
+  width: 70vw;
+}
+.text-f2b-heart-snap .snap {
+  font-weight: 700;
+  font-style: italic;
+  color: #bb0009;
+  display: inline-block;
+  animation: snapAnim 0.5s ease-in-out infinite alternate;
+}
+@keyframes snapAnim {
+  0%,
+  100% {
+    color: #bb0009;
+    text-shadow: none;
+  }
+  50% {
+    color: #be1717;
+    text-shadow: 0px 1px 2px #ff7b7b, 0 0 10px #f4bcbc, 0 0 30px #ff7b7b;
+  }
+}
+.text-f2b-floated {
+  top: 126vh;
+  left: 12vw;
+  font-weight: 500;
+}
+.text-f2b-hand-1 {
+  top: 145vh;
+  left: 32vw;
+  font-weight: 500;
+}
+.text-f2b-hand-2 {
+  top: 160vh;
+  left: 52vw;
+  font-weight: 500;
+}
+.text-f2b-moved-back {
+  top: 175vh;
+  left: 72vw;
+  font-weight: 700;
+  font-style: italic;
+}
+
+@keyframes gripping-string {
+  0%,
+  100% {
+    transform: translateX(-58%) scale(2);
+  }
+  50% {
+    transform: translateX(-47%) scale(2);
+  }
+}
+#hand-holding {
+  position: absolute;
+  top: 160vh;
+  width: 100vw;
+  height: 100vh;
+  left: 50%;
+  transform: translateX(-50%) scale(1.3);
+  overflow: hidden;
+  background-image: url(elements/hand-holding.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 7;
+  rotate: 5deg;
+  overflow: hidden;
+  animation: gripping 0.9s ease-out infinite alternate;
+}
+@keyframes gripping {
+  0%,
+  100% {
+    transform: translateX(-58%) scale(1.5);
+  }
+  50% {
+    transform: translateX(-47%) scale(1.5);
+  }
+}
+/* ===== FRAME 2A+1B: NEW TEXT ELEMENTS ===== */
+#texture-overlay-f2 {
+  position: absolute;
+  top: 100;
+  left: 0;
+  width: 100vw;
+  height: 600vh;
+  background-image: url(images/texture-overlayf2.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none; /* Pure visual layer */
+  z-index: 22;
+}
+#texture-overlay-f2-1 {
+  position: absolute;
+  top: 100;
+  left: 0;
+  width: 100vw;
+  height: 600vh;
+  background-image: url(images/texture-overlayf2.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  pointer-events: none; /* Pure visual layer */
+  z-index: 21; 
+}
+.text-f2-autumn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+}
+
+.text-f2-knees {
+  position: absolute;
+  top: 20vh;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #f1f1ff;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+}
+.text-f2-knees #em {
+  font-style: bold;
+  font-weight: 900 !important;
+  color: #f1f1ff;
+  mix-blend-mode: luminosity;
+  display: inline-block;
+  animation: freeze 3s ease-in-out infinite alternate;
+}
+.text-f2-knees #em:hover {
+  animation-play-state: paused;
+  transform: rotate(-10deg) scale(2);
+}
+@keyframes freeze {
+  0%,
+  100% {
+    color: #fafafc;
+    text-shadow: none;
+  }
+  50% {
+    color: #4dd4fd;
+    text-shadow: 0px 1px 2px #63a9fe, 0 0 20px #63a9fe, 0 0 30px #63a9fe;
+  }
+}
+.text-f2-stood {
+  position: absolute;
+  left: 78%;
+  transform: translateX(-50%);
+  top: 40vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+}
+
+.text-f2-without {
+  position: absolute;
+  left: 75%;
+  top: 60vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: right;
+}
+
+.text-f2-called {
+  position: absolute;
+  left: 40.8vw; /* 2703.33 - 1956 = 747.33 / 1920 * 100 */
+  top: 13.24vh; /* 1407 - 1150 = 257px / 1920 * 100 */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f2-nudes {
+  position: absolute;
+  left: 47.59vw; /* 2870.33 - 1956 = 914.33 / 1920 * 100 */
+  top: calc(0vh + 19.44vh); /* 1524 - 1150 = 374px / 1920 * 100 */
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f2-nude-number {
+  position: absolute;
+  left: 33.02vw; /* 2590.33 - 1956 = 634.33 / 1920 * 100 */
+  top: calc(0vh + 32.87vh); /* 1782 - 1150 = 632px / 1920 * 100 */
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f2-nude-number .highlight-white {
+  color: #fdfff1;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.5rem;
+}
+
+.text-f2-nude-number .highlight-red {
+  color: #bb0009;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 1.5rem;
+}
+
+.text-f2-nude-number .regular {
+  font-weight: 500;
+  font-style: normal;
+  font-size: 1.5rem;
+}
+
+.text-f2-stands {
+  position: absolute;
+  left: 62.39vw; /* 3154.33 - 1956 = 1198.33 / 1920 * 100 */
+  top: calc(0vh + 46.02vh); /* 2035 - 1150 = 885px / 1920 * 100 */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f2-not-enough {
+  position: absolute;
+  left: 5vw;
+  top: 80vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f2-not-enough .highlight-red {
+  color: #bb0009;
+}
+
+.text-f2-not-enough .regular {
+  color: #fdfff1;
+}
+
+.text-f2-five-years {
+  position: absolute;
+  right: -30vw;
+  top: 100vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+  text-align: right;
+}
+/* ===== FRAME 4B: HANDS AND TEXT ===== */
+#scene4b {
+  position: absolute;
+  top: 80vh; /* Starts after the firsit two screens (i.e., at the start of the third screen) */
+  left: 0;
+  min-width: 100vw;
+  height: 600vh;
+  background-size: cover;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+#left-hand {
+  position: absolute;
+  top: 200vh;
+  left: -30vw;
+  scale: 1.3;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(elements/left-hand.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 9;
+  transition: left 1.5s ease-in-out;
+}
+#left-hand:hover {
+  left: 5vw;
+}
+
+#right-hand {
+  position: absolute;
+  top: 210vh;
+  left: 30vw;
+  scale: 1.3;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(elements/right-hand.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 8;
+  animation: handDisappear 7s ease-out infinite alternate;
+}
+@keyframes handDisappear {
+  0%, 25% {
+    left: 30vw;
+    opacity: 1;
+  }
+  50%, 100% {
+    left: 100vw;
+    opacity: 0;
+  }
+}
+/* ===== FRAME 4B: TEXT ELEMENTS ===== */
+.text-f4b-yes {
+  position: absolute;
+  left: 60%;
+  top: 295vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  font-style: italic;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #bb0009;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  /* animation: shake 0.5s ease-in-out infinite alternate; */
+}
+/* Figma node 75:213 */
+.text-f4b-i-dont-want {
+  position: absolute;
+  top: 275vh; /* slightly before YES, adjust if needed */
+  left: 20%;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem; /* using unified size (Figma 55px ≈ 2rem) */
+  line-height: 1.05;
+  letter-spacing: -0.15vw; /* approximate -2.7778px tracking from Figma */
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+  white-space: nowrap;
+}
+.text-f4b-i-dont-want .dont {
+  font-weight: 700;
+  font-style: italic;
+  color: #bb0009;
+  letter-spacing: -0.05vw;
+  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.text-f4b-i-dont-want .dont:hover {
+  transform: scale(1.3) rotate(-6deg);
+  opacity: 0.9;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(0deg) scale(1);
+    color: #bb0009;
+  }
+  25% {
+    transform: translateX(-50%) rotate(5deg) scale(1.4);
+    color: #ff0000;
+  }
+  75% {
+    transform: translateX(-50%) rotate(-5deg) scale(1.2);
+    color: #020000;
+  }
+}
+.text-f4b-i-said {
+  position: absolute;
+  top: 320vh;
+  left: 20%;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+}
+.text-f4b-remove {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 340vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #bb0009;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+  /* animation: drop 4s ease-out both infinite; */
+}
+.text-f4b-my {
+  position: absolute;
+  left: 60%;
+  transform: translateX(-50%);
+  top: 360vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+}
+.text-f4b-clothes {
+  position: absolute;
+  left: 70%;
+  top: 380vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  font-style: italic;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #bb0009;
+  margin: 0;
+  white-space: nowrap;
+  z-index: 9;
+  text-align: center;
+  animation: drop 8s 3s ease-out both infinite;
+}
+.text-f4b-clothes:hover {
+  animation-play-state: paused;
+  transform: scale(1.2) rotate(-10deg);
+  opacity: 0.9;
+}
+@keyframes drop {
+  0% {
+    top: 380vh;
+    scale: 1.3;
+  }
+  100% {
+    top: 390vh;
+    scale: 0.4;
+    opacity: 0.1;
+  }
+}
+
+.text-f4b-everything {
+  position: absolute;
+  left: 15%;
+  top: 420vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-size: 2rem;
+  font-style: italic;
+  font-kerning: auto;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f4b-everything .highlight-red {
+  color: #bb0009;
+  display: inline-block;
+  /* animation: heartBeat1 0.65s ease-in-out infinite; */
+}
+@keyframes heartBeat1 {
+  0%,
+  75% {
+    scale: 0.9;
+  }
+  50%,
+  100% {
+    scale: 1;
+  }
+}
+.text-f4b-learned {
+  position: absolute;
+  left: 60%;
+  top: 450vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f4b-when {
+  position: absolute;
+  left: 40%;
+  top: 480vh;
+  font-family: "EB Garamond", serif;
+  font-size: 2rem;
+  line-height: 1.01;
+  letter-spacing: -0.052vw;
+  color: #fdfff1;
+  margin: 0;
+  white-space: pre-wrap;
+  z-index: 9;
+}
+
+.text-f4b-when .regular-text {
+  font-weight: 500;
+  font-style: normal;
+}
+
+.text-f4b-when .italic-text {
+  font-weight: 700 !important;
+  font-style: italic;
+  color:#bb0009;
+}
+#roots {
+  position: absolute;
+  left: -38.07vw;
+  top: 650vh;
+  width: 100vw;
+  height: 100vh;
+  scale: 1.3;
+  background-image: url(images/roots.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  mix-blend-mode: overlay;
+  z-index: 1;
+  pointer-events: none;
+}
+.blur-seam-4-5 {
+    position: absolute;
+    left: 0;
+    width: 100vw;
+    z-index: 50;
+    pointer-events: none;
+    top: 800vh; 
+    height: 25vh; 
+    transform: translateY(-50%);
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+}
+
+/* ===== FRAME 5: COUPLE, ROOTS AND TEXT ===== */
+.frame5-container {
+  position: absolute;
+  top: 780vh;
+  left: 0;
+  width: 100vw;
+  height: 500vh;
+  background-color: transparent;
+  overflow: hidden;
+}
+.blurry {
+  position: relative;
+  left: 48%;
+  top: 56vh;
+  background-image: url(elements/blurry.gif);
+  width: 62.4vw;
+  height: 83.7vh;
+  scale: 0.8;
+  background-size: contain; 
+  background-repeat: no-repeat;
+  z-index: 9;
+  mix-blend-mode:luminosity;
+  animation: blurAnim 6s ease-in-out infinite alternate;
+}
+@keyframes blurAnim {
+  0%, 25%, 100% {
+    filter: blur(0px) opacity(1);
+  }
+  50%, 75% {
+    filter: blur(2px) opacity(0);
+  }
+}
+#the-couple {
+  position: absolute;
+  left: 37.34vw;
+  top: 85vh;
+  width: 62.4vw;
+  height: 83.7vh;
+  background-image: url(images/the-couple.png);
+  background-size: contain;
+
+  background-repeat: no-repeat;
+  z-index: 8;
+}
+.text-f5-soul {
+  position: absolute;
+  top: 0vh;
+  /* ✅ KEEP/ADD THESE LINES ✅ */
+  right: 10vw; /* Pins it 10% from the right edge */
+  text-align: right;
+
+  /* Styling */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  color: #fdfff1;
+  white-space: nowrap;
+  z-index: 9;
+}
+
+.text-f5-stretched {
+  position: absolute;
+  top: 20vh;
+  /* --- THE FIX --- */
+  /* Just place it on the left side */
+  left: 10vw;
+  /* Styling */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  right: 10vw; /* Pins it 10% from the right edge */
+  text-align: right;
+  z-index: 20;
+  white-space: nowrap;
+}
+
+.text-f5-stretched em {
+  font-style: italic;
+}
+
+.text-f5-where {
+  position: absolute;
+  top: 40vh;
+
+  /* --- THE FIX --- */
+  /* Instead of pushing it from the right, just place it on the left */
+  left: 10vw; /* Adjust this number to move it exactly where you want */
+  font-family: "EB Garamond", serif;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  text-align: right; /* Changed to left since it's on the left side */
+  right: 10vw; /* Pins it 10% from the right edge */
+  z-index: 15;
+  white-space: nowrap; /* Ensures text doesn't wrap weirdly */
+}
+/* Responsive adjustment for .text-f5-where padding */
+
+.text-f5-where .medium {
+  font-weight: 500;
+  line-height: 1.667;
+}
+
+.text-f5-where .highlight {
+  font-weight: 500;
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+}
+
+.text-f5-soul-watch {
+  position: absolute;
+  top: 60vh; /* shifted +20vh */
+  /* ✅ KEEP/ADD THESE LINES ✅ */
+  right: 10vw; /* Pins it 10% from the right edge */
+  text-align: right;
+  font-style: italic;
+  /* Styling (Keep these) */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  color: #fdfff1;
+  white-space: nowrap;
+  z-index: 9;
+}
+.text-f5-soul-watch .highlight-red {
+  font-weight: 500;
+  font-style: italic;
+  display: inline-block;
+  font-size: 2.5rem;
+  color: #bb0009;
+}
+.text-f5-soul-watch .highlight-red:hover {
+  filter: blur(4px);
+}
+.text-f5-law {
+  position: absolute;
+  left: 46.41vw;
+  top: 86.2vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #e5e7da;
+  text-align: center;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f5-law .highlight-red {
+  color: #bb0009;
+  display: inline-block;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 6px #bb0009);
+  display: inline-block;
+  transition: transform 0.8s ease, filter 0.3s ease;
+}
+.text-f5-law .highlight-red:hover {
+  transform: scale(1.6);
+  filter: blur(4px);
+}
+.text-f5-covers {
+  position: absolute;
+  left: 29.8vw;
+  top: 102.41vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  text-align: center;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 9;
+  transition: left 1.2s ease;
+}
+.text-f5-covers:hover {
+  left: 34vw;
+}
+.text-f5-time {
+  position: absolute;
+  left: 20vw;
+  top: 118.61vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 9;
+  transition: left 1.2s ease;
+}
+.text-f5-time:hover {
+  left: 25vw;
+}
+.text-f5-caressing {
+  position: absolute;
+  left: 16.82vw;
+  top: 134.81vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  width: 58.33vw;
+  white-space: pre-wrap;
+  z-index: 9;
+  transition: left 1.2s ease;
+}
+.text-f5-caressing:hover {
+  left: 26vw;
+} 
+.text-f5-language {
+  position: absolute;
+  left: 44.58vw;
+  top: 151.76vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  width: 58.33vw;
+  white-space: pre-wrap;
+  z-index: 9;
+  transition: left 1.2s ease;
+}
+.text-f5-language:hover {
+  left: 54vw;
+} 
+.text-f5-children {
+  position: absolute;
+  left: 50vw;
+  top: 168.7vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.389;
+  font-style: italic;
+  letter-spacing: -1px;
+  color: #aef4f0;
+  margin: 0;
+  width: 58.33vw;
+  white-space: pre-wrap;
+  z-index: 9;
+  transition: left 1.2s ease;
+}
+.text-f5-children:hover {
+  left: 60vw;
+} 
+.text-f5-centred {
+  position: absolute;
+  left: calc(50% - 28.28vw);
+  top: 192.96vh; /* shifted +20vh */
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -1px;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+.text-f5-centred .highlight-blue {
+  color: #aef4f0;
+  display: inline-block;
+  font-size: 3rem;
+  filter: drop-shadow(0 0 6px #aef4f0);
+}
+.text-f5-centred .highlight-red {
+  color: #bb0009;
+  display: inline-block;
+  font-size: 3rem;
+  filter: drop-shadow(0 0 6px #bb0009);
+}
+
+/* ===== TEXTURE OVERLAYS ===== */
+#texture-overlay-1 {
+  position: absolute;
+  top: 0vh; /* shifted +20vh */
+  left: 0;
+  width: 208.85vw;
+  height: 495.37vh;
+  background-image: url(images/texture-overlay-1.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  mix-blend-mode: lighten;
+  opacity: 0.3;
+  z-index: 6;
+}
+
+/* ===== FRAME 7: THE END ===== */
+.text-f7-end {
+  position: absolute;
+  left: 45vw;
+  top: 260vh;
+  font-family: "EB Garamond", serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 2rem;
+  line-height: 1.389;
+  letter-spacing: -2.7778px;
+  color: #fdfff1;
+  margin: 0;
+  z-index: 9;
+}
+
+/* GLOBAL OVERRIDE: force all text to font-weight 500 as requested */
+/* This is intentionally broad and uses !important to override specific rules. */
+body, body * {
+  font-weight: 500 !important;
+}
+
+/* Exceptions: keep these selectors bold despite the global override */
+.em,
+.dont,
+.hi-white
+.hi-red,
+.hi-white,
+.highlight-red,
+.text-f1b-nudes,
+.text-f1b-nude1,
+.text-f2-nudes,
+.text-f2-nude-number,
+.text-f4b-yes,
+.text-f4b-remove,
+.text-f4b-my,
+.text-f4b-clothes,
+.text-f4b-everything,
+.text-f5-centred,
+.text-f7-end,
+strong,
+b {
+  font-weight: 700 !important;
+}
+

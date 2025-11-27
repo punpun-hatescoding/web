@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Poem</title>
-    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almendra+Display&family=Almendra:ital,wght@0,400;0,700;1,400;1,700&family=Aref+Ruqaa:wght@400;700&family=Bilbo+Swash+Caps&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Griffy&family=Ingrid+Darling&family=Jacquard+12&family=Jim+Nightshade&family=Mountains+of+Christmas:wght@400;700&family=My+Soul&family=New+Rocker&family=Playfair+Display:ital,wght@1,600&family=Quintessential&family=UnifrakturMaguntia&family=Yuji+Mai&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -12,87 +16,186 @@
     <div id="innerframe"></div>
     <div id="redframe"></div>
     <div id="title"></div>
-    <div class="frame1-container flashlight-wrapper">
+    <p class="author-name">a poem by Anne Carson</p>
+    <audio id="bg-music" src="audio/hatsukoi.wav" loop hidden></audio>
+    <div id="music-box" class="paused" onclick="triggerMusic()"></div>
+ 
+    <div class="frame1-container flashlight-wrapper"> 
         <div id="scene-a">
             <div id="window"></div>
-            <div id="main-char" onclick="triggerSceneSwap()">
-            </div>
-            <div id="animated-curtain"></div>
+            <div id="main-char" onclick="triggerSceneSwap()" onmouseenter="playHoverSound()"></div>
+            <div  class="animated-curtain"></div>
             <div id="mist"></div>
             <div id="lighting"></div>
+             <!-- Introductory narrative text (Figma nodes 75-177, 75-286, 75-287) -->
+            <p class="text-f1-vision">Each morning a <span class="em">vision</span> came to me.</p>
+            <p class="text-f1-understood">Gradually I understood that these were <span class="em">naked</span></p>
+            <p class="text-f1-glimpses">glimpses of my <span class="em">soul.</span></p>
         </div>
         <div id="scene-b" class="hidden">
             <div id="main-char-f1b"></div>
-            <div id="windows-f1b" style="filter: grayscale(100%);"></div>
+            <div  class="curtain-open"></div>
+            <div id="texture-overlay-f1b"></div>
+            <div id="windows-f1b" style="filter: grayscale(10%);"></div>
+            <div id="mist-f1b"></div>
+            <p class="text-f1-vision">Each morning a <span class="em">vision</span> came to me.</p>
+            <p class="text-f1-understood">Gradually I understood that these were <span class="em">naked</span></p>
+            <p class="text-f1-glimpses">glimpses of my <span class="em">soul.</span></p>
+            <p class="text-f1b-she-stands">She stands into the wind.</p>
+            <p class="text-f1b-nude1"><span class="hi-white">Nude</span> <span class="hi-red">#1</span><span class="hi-white">.</span> <span class="rest">Woman alone on a hill.</span></p>
+            <p class="text-f1b-i-called">I called them</p>
+            <p class="text-f1b-nudes">Nudes.</p>
+            <p class="text-f1b-autumn">Autumn had begun,</p>
+            <!-- Scene B: Five Figma text designs (nodes 77-361, 75-288, 75-196, 75-195, 77-293) -->
         </div>
+
     </div>
     <div id="overlay"></div>
     <div id="flashlight-wrapper">
     </div>
     </div>
     <div class="frame2345-container">
-       <div id="ambience"></div>
-       <div id="main-heart"></div>
-       <div id="hand-holding"></div>
+        <div id="scene2a">
+          <div id="ambience"></div>
+          <div id="main-heart" onclick="triggerSceneSwap2()"></div>
+           <!-- Frame 2a+1b: New text elements -->
+        </div>
+        <p class="text-f2-knees">my knees were <span id="em">cold</span> inside my clothes.</p>
+        <p class="text-f2-stood">He stood in my living room and spoke</p>
+        <p class="text-f2-without">without looking at me.</p>
+        <p class="text-f2-not-enough"><span class="highlight-red">Not enough</span><span class="regular"> spin on
+                it,</span></p>
+        <p class="text-f2-five-years">he said of our five years of love.</p>
+        <div id="scene2b" class="hidden2">
+            <div id="ambience"></div>
+            <div id="left-heart"></div>  
+            <div id="right-heart"></div>
+            <div id="string"></div>
+            <div id="polaroids"></div>
+            <!-- Scene2B textual sequence (Figma nodes 75-211,75-289,75-212,75-290,77-406) -->
+            <p class="text-f2b-heart-snap">Inside my chest I felt my heart <span class="snap">snap</span> into two pieces</p>
+            <p class="text-f2b-floated">which floated apart.</p>
+            <p class="text-f2b-hand-1">I put out my hand</p>
+            <p class="text-f2b-hand-2">to touch his.</p>
+            <p class="text-f2b-moved-back">He moved back.</p>
+        </div>
+        <div id="scene4a">
+            <div id="hand-holding"></div>
+            <p class="text-f4b-i-dont-want">I <span class="dont">DON’T</span> want to be sexual with you, he said.</p>
+        </div>
+        
+        <!-- Figma Node 75:193 Texture Overlay -->
+        <div id="texture-overlay-f2"></div>
+        <div id="texture-overlay-f2-1"></div>
        
-       <!-- Frame 2a+1b: New text elements -->
-       <p class="text-f2-autumn">Autumn had begun,</p>
-       <p class="text-f2-knees">my knees were cold inside my clothes.</p>
-       <p class="text-f2-stood">He stood in my living room and spoke</p>
-       <p class="text-f2-without">without looking at me.</p>
-       <p class="text-f2-not-enough"><span class="highlight-red">Not enough</span><span class="regular"> spin on it,</span></p>
-       <p class="text-f2-five-years">he said of our five years of love.</p>
-       
-       <!-- Frame 4b: Hand images and text -->
-       <div class="frame4b-content">
-           <p class="text-f4-yes">YES,</p>
-           <p class="text-f4-began">I said as I began to</p>
-           <p class="text-f4-remove">REMOVE</p>
-           <p class="text-f4-my">my</p>
-           <p class="text-f4-clothes">CLOTHES.</p>
-       </div>
-       
-       <!-- Frame 5: Couple, roots and text -->
-       <div class="frame5-content">
-           <div id="the-couple"></div>
-           <div id="roots"></div>
-           <p class="text-f5-love">Everything I know about<span class="highlight"> LOVE </span>and its necessities</p>
-           <p class="text-f5-learned">I learned in that one moment</p>
-           <p class="text-f5-found"><span class="medium">when </span><span class="highlight">I found myself</span></p>
-           <p class="text-f5-soul"><span class="highlight">Soul</span> is the place,</p>
-           <p class="text-f5-stretched">stretched like a surface of <em>millstone grit</em> between body and mind,</p>
-           <p class="text-f5-where"><span class="medium">where </span><span class="highlight">such necessity grinds itself out.</span></p>
-       </div>
-       
-       <!-- Text for frame6 area -->
-       <p class="text-f6-soul">Soul is what I kept watch on all that night.</p>
-       <p class="text-f6-law">Law stayed with me.</p>
-       <p class="text-f6-covers">We lay on top of the covers</p>
-       <p class="text-f6-time">as if it weren't really a night of sleep and time</p>
-       <p class="text-f6-caressing">caressing and singing to one another in our</p>
-       <p class="text-f6-language">made-up language</p>
-       <p class="text-f6-children">like the children we used to be.</p>
-       <p class="text-f6-centred">That was a night that centred Heaven and Hell.</p>
-       
-       <!-- Frame 7: The end -->
-       <p class="text-f7-end">The end.</p>
-       
-       <!-- Texture overlays -->
-       <div id="texture-overlay-1"></div>
-       <div id="texture-overlay-2"></div>
+
+        <!-- Frame 4b: Hand images and text -->
+        <div id="scene4b">
+            <div id="left-hand"></div>
+            <div id="right-hand"></div>
+        <p class="text-f4b-yes">YES,</p>
+        <p class="text-f4b-i-said">I said as I began to</p>
+        <p class="text-f4b-remove">REMOVE</p>
+        <p class="text-f4b-my">my</p>
+        <p class="text-f4b-clothes">CLOTHES.</p>
+        <p class="text-f4b-everything">Everything I know about  <span class="highlight-red">  love  </span> and its
+            necessities</p>
+        <p class="text-f4b-learned">I learned in that one moment</p>
+        <p class="text-f4b-when"><span class="regular-text">when </span><span class="italic-text"> I found myself</span>
+        </p>
+        </div> 
     </div>
+       <div id="roots"></div>
+       <div class="blur-seam-4-5"></div>
+    <!-- Frame 5: Couple, roots and soul text -->
+    <div class="frame5-container">
+        <div id="the-couple"></div>
+        <div id="texture-overlay-1"></div>
+        <div id="texture-overlay-2"></div>
+        <div class="blurry"></div>
+        <!-- Frame 5 text elements -->
+        <!--<p class="text-f5-soul"><span class="highlight">Soul </span>is the place,</p>
+        <p class="text-f5-stretched">stretched like a surface of <em>millstone grit</em> between body and mind,</p>
+        <p class="text-f5-where"><span class="medium">where </span><span class="highlight">such necessity grinds itself
+                out.</span></p>!-->
+        <p class="text-f5-soul-watch"><span class="highlight-red">Soul</span>  is what I kept watch on all that night.</p>
+        <p class="text-f5-law"><span class="highlight-red">Law</span>  stayed with me.</p>
+        <p class="text-f5-covers">We lay on top of the covers</p>
+        <p class="text-f5-time">as if it weren't really a night of sleep and time</p>
+        <p class="text-f5-caressing">caressing and singing to one another in our</p>
+        <p class="text-f5-language">made-up language</p>
+        <p class="text-f5-children">like the children we used to be.</p>
+        <p class="text-f5-centred">That was a night that centred <span class="highlight-blue">Heaven</span> and <span class="highlight-red">Hell</span>.</p>
+
+        <!-- Frame 7 - The end -->
+        <p class="text-f7-end">The end.</p>
+    </div>
+
+
     <script>
-        const wrapper = document.getElementById('flashlight-wrapper');
+        // --- 1. FLASHLIGHT LOGIC ---
+        // This finds every element with "flashlight-wrapper" class
+        const wrappers = document.querySelectorAll('#flashlight-wrapper');
 
         function updateFlashlight(event) {
-            const clientX = event.clientX;
+            const clientX = event.clientX; 
             const clientY = event.clientY;
-         
-            wrapper.style.setProperty('--mouse-x', clientX + 'px');
-            wrapper.style.setProperty('--mouse-y', clientY + 'px'); 
+
+            wrappers.forEach(function(wrapper) {
+                wrapper.style.setProperty('--mouse-x', clientX + 'px');
+                wrapper.style.setProperty('--mouse-y', clientY + 'px');
+            });
         }
+
         document.addEventListener('mousemove', updateFlashlight);
+
+        // --- 2. SCENE SWAP LOGIC ---
+        function triggerSceneSwap() {
+            console.log("Scene Swap Triggered!"); 
+
+            const sceneA = document.getElementById('scene-a');
+            const sceneB = document.getElementById('scene-b');
+
+            // Toggle visibility
+            sceneA.classList.add('hidden');
+            sceneB.classList.remove('hidden');
+        }
+        // --- 2. SCENE SWAP LOGIC scene 2 ---
+        function triggerSceneSwap2() {
+            console.log("Scene Swap 2 Triggered!"); 
+
+            const scene2A = document.getElementById('scene2a');
+            const scene2B = document.getElementById('scene2b');
+
+            // Toggle visibility
+            scene2A.classList.add('hidden2');
+            scene2B.classList.remove('hidden2');
+        }
+        
+      function triggerMusic() {
+    // 1. First, get the element reference
+    const bgMusic = document.getElementById('bg-music');
+    
+    // 2. Then, set the volume (0.0 to 1.0)
+    bgMusic.volume = 0.3; 
+
+    const musicBox = document.getElementById('music-box');
+
+    // 3. Now the rest of your logic will work because 'bgMusic' is an element
+    if (bgMusic.paused) {
+        bgMusic.play();
+        musicBox.classList.remove('paused');
+        console.log("Music Playing - Vol 0.1");
+    } 
+    else {
+        bgMusic.pause();
+        musicBox.classList.add('paused');
+        console.log("Music Paused");
+    }
+}
+
     </script>
-   
-    </body>
+
+</body>
+
 </html>
