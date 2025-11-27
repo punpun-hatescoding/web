@@ -1,0 +1,107 @@
+body {
+  background-color: #263728;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.content-wrapper {
+  /* FIX: Removed 'display: flex', 'justify-content', and 'align-items' 
+    as they don't affect absolutely positioned children.
+  */
+  position: relative; /* This acts as the anchor for all the absolute frames */
+  height: 100vh;
+  max-width: 1920px;
+
+  /* FIX: Changed margins to 'auto' to center the wrapper */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.main-title-container {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    max-width: 1920px;
+    display: block;
+}
+
+#outerframe {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 1080px;
+  background-image: url(elements/outerframe.png);
+  background-size: contain;
+  background-repeat: no-repeat; /* Added for consistency */
+  z-index: 0; /* This is the bottom layer, correct. */
+}
+
+#innerframe {
+  /* FIX: Changed to 'absolute' to stack correctly */
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  /* FIX: Changed to '100vh' (viewport height) */
+  height: 1080px; 
+  flex-shrink: 0;
+  background-image: url(elements/innerframe.png);
+  background-size: contain;
+  transform: scale(0.9);
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1; /* Stacks on top of outerframe, correct. */
+}
+
+#redframe {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  background-image: url(elements/red-frame.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  scale: 0.95;
+  z-index: 2; /* Stacks on top of innerframe, correct. */
+}
+
+#title {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  background-image: url(elements/title-typo.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  scale: 0.7;
+  z-index: 2; /* Stacks at the same level as redframe, correct. */
+}
+
+/* This section is for your second "page" below the fold. */
+/* This positioning looks correct for a scrolling site. */
+.frame1-container {
+  position: absolute;
+  top: 100vh;
+  left: 0px;
+  max-width: 1920px;
+  height: 100vh;
+}
+
+#background-frame1 {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  background-image: url(elements/window.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 3;
+}

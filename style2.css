@@ -1,0 +1,859 @@
+/* style2.css */
+
+/* 
+Z-INDEX LAYERING STRATEGY:
+0 - outerframe (bottom)
+1 - innerframe
+2 - redframe, window, animated-curtain
+3 - title, lighting
+4 - main-char
+5 - mist, main-heart
+6 - ambience (top)
+10+ - overlays (e.g., flashlight effect)
+Adjust and document new layers as needed for future elements.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 800vh;
+    background-color: #2B322C;
+    /* This stops horizontal scrollbars */
+    overflow-x: hidden;
+    font-family: 'EB Garamond', serif;
+}
+
+/* 2. The Centering Method:
+   We will apply this class to ALL frames to make them 
+   full-screen and centered.
+*/
+
+#outerframe,
+#innerframe,
+#redframe,
+#title {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* This centers the element */
+    
+    /* This ensures all background images are centered and contained */
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 3. Apply Individual Images and Stacking */
+
+#outerframe {
+    background-image: url(elements/outerframe.png);
+    z-index: 0; /* Bottom layer */
+    background-size:cover;
+   
+}
+
+#innerframe {
+    background-image: url(elements/innerframe.png);
+    z-index: 1; /* Sits on top of outerframe */
+    transform: translate(-50%, -50%) scale(0.90,0.95); 
+}
+
+#redframe {
+    background-image: url(elements/red-frame.png);
+    z-index: 2; /* Sits on top of innerframe */
+    transform: translate(-50%, -50%) scale(0.95); /* 95% scale */
+}
+
+#title {
+    background-image: url(elements/title-typo.svg);
+    z-index: 3; /* Top layer */
+    transform: translate(-50%, -50%) scale(0.7); /* 70% scale */
+}
+
+/* This is for your second page, which we will add later.
+   We make it sit 100vh (1 full screen height) below the top.
+*/
+
+.frame1-container {
+    position: absolute;
+    top: calc(100vh - 10px); /* Starts after the first screen ends */
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+}
+
+#window {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-image: url(elements/window.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2;
+}
+#main-char {
+    position: absolute;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    scale: 0.9;
+    background-image: url(elements/main-char.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 4;
+#animated-curtain {
+    position: absolute;
+    right: 50%;
+    width: 100%;
+    height: 100%;
+    background-image: url(elements/animated-curtain.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: right;
+    z-index: 2;
+}
+#mist {
+    position: absolute;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-image: url(elements/mist.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 5;
+}
+#lighting {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url(elements/lighting.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 3;
+    mix-blend-mode: soft-light;
+}
+/* --- FLASHLIGHT EFFECT STYLES --- */
+#flashlight-wrapper {
+    /* Crucial: Must NOT have a background color that hides the body image */
+    background-color: transparent; 
+    
+    /* Ensure the text color is dark so it is readable against the revealed image */
+    color: rgb(0, 0, 0); 
+    
+    /* ... keep position: fixed, width: 100vw, etc. ... */
+}
+
+/* --- 3. The Light Beam Overlay (The Darkness) --- */
+#flashlight-wrapper::before {
+    content: "";
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    /* FIX: Invert the radial gradient! */
+    background: radial-gradient(
+        circle 300px at var(--mouse-x) var(--mouse-y), 
+        rgba(255, 255, 255, 0) 7%,          /* Center: Fully Transparent (Reveals Image) */
+        rgb(0, 0, 0) 60%       /* Edge: Mostly Black (Hides Image) */
+    );
+    
+    pointer-events: none;
+    z-index: 10;
+}
+:root {
+    --screen-count-before-frame2: 2;
+}
+
+.frame2345-container {
+    position: absolute;
+    top: calc(200vh - 10px); /* Starts after the first two screens (i.e., at the start of the third screen) */
+    left: 0;
+    min-width: 100vw;
+    height: 400vh;
+    background-size: cover;
+    background-color: transparent;
+}
+
+#main-heart {
+    position: absolute;
+    top: 20px;
+    width: 100vw;
+    height: 100vh;
+    left: 15%;
+    transform: scale(0.5);
+    background-image: url(elements/main-heart.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 6;
+}
+#ambience {
+    position: absolute;
+    width: 100vw;
+    height: 200vh;
+    background-image: url(elements/ambience.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    mix-blend-mode: lighten;
+    opacity: 0.5;
+    z-index: 7;
+}
+#hand-holding {
+    position: absolute;
+    top: 150vh;
+    
+    /* 1. Reduce the Width */
+    /* Change 100vw to something smaller (e.g., 60vw, 80vw) to crop the sides */
+    width: 70vw; 
+    
+    /* 2. Keep the Height */
+    height: 100vh;
+    
+    /* 3. Center the Element */
+    /* This ensures you crop equally from both left and right */
+    left: 50%;
+    /* Combine centering with your scale */
+    transform: translateX(-50%) scale(1.5); 
+    
+    /* 4. Background Settings */
+    background-image: url(elements/hand-holding.png);
+    
+    /* 'cover' ensures the image stays 100vh tall, 
+       cutting off the sides that don't fit in the new width */
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 7;
+    
+    /* Optional: Ensures the scaled edges don't spill over neighbors */
+    overflow: hidden; 
+}
+
+/* ===== FRAME 3B: HANDS AND TEXT ===== */
+.frame4b-content {
+    position: absolute;
+    top: 450vh;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+#left-hand {
+    position: absolute;
+    left: -8.33vw; /* -160px / 1920 * 100 */
+    top: 28.15vh; /* 304px / 1080 * 100 */
+    width: 69.06vw; /* 1326px / 1920 * 100 */
+    height: 64.35vh; /* 695px / 1080 * 100 */
+    background-image: url(images/left-hand.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 8;
+}
+
+#right-hand {
+    position: absolute;
+    left: 50.31vw; /* 966px / 1920 * 100 */
+    top: 60.28vh; /* 651px / 1080 * 100 */
+    width: 65.78vw; /* 1263px / 1920 * 100 */
+    height: 106.94vh; /* 1155px / 1080 * 100 */
+    background-image: url(images/right-hand.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    mix-blend-mode: multiply;
+    z-index: 8;
+}
+
+.text-f4-yes {
+    position: absolute;
+    left: 66.82vw; /* 1283px / 1920 * 100 */
+    top: 13.06vh; /* 141px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px); /* Responsive font size */
+    line-height: 1.389;
+    letter-spacing: -0.145vw;
+    color: #BB0009;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f4-began {
+    position: absolute;
+    left: 19.64vw; /* 377px / 1920 * 100 */
+    top: 33.98vh; /* 367px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    white-space: nowrap;
+    z-index: 9;
+}
+
+.text-f4-remove {
+    position: absolute;
+    left: 41.20vw; /* 791px / 1920 * 100 */
+    top: 52.87vh; /* 571px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #BB0009;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f4-my {
+    position: absolute;
+    left: 57.60vw; /* 1106px / 1920 * 100 */
+    top: 64.72vh; /* 699px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f4-clothes {
+    position: absolute;
+    left: 66.82vw; /* 1283px / 1920 * 100 */
+    top: 77.13vh; /* 833px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #BB0009;
+    margin: 0;
+    z-index: 9;
+}
+
+/* ===== FRAME 5: COUPLE, ROOTS AND TEXT ===== */
+.frame5-content {
+    position: absolute;
+    top: 450vh;
+    left: 0;
+    width: 100vw;
+    height: 200vh;
+}
+
+#the-couple {
+    position: absolute;
+    left: 37.34vw; /* 717px / 1920 * 100 */
+    top: 15.65vh; /* 169px / 1080 * 100 */
+    width: 62.40vw; /* 1198px / 1920 * 100 */
+    height: 83.70vh; /* 904px / 1080 * 100 */
+    background-image: url(images/the-couple.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 8;
+}
+
+#roots {
+    position: absolute;
+    left: -38.07vw; /* -731px / 1920 * 100 */
+    top: -32.87vh; /* -355px / 1080 * 100 */
+    width: 83.44vw; /* 1602px / 1920 * 100 */
+    height: 132.69vh; /* 1433px / 1080 * 100 */
+    background-image: url(images/roots.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    mix-blend-mode: overlay;
+    z-index: 7;
+}
+
+.text-f5-love {
+    position: absolute;
+    left: 6.20vw; /* 119px / 1920 * 100 */
+    top: -69.44vh; /* -750px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f5-love .highlight {
+    color: #BB0009;
+}
+
+.text-f5-learned {
+    position: absolute;
+    left: 54.90vw; /* 1054px / 1920 * 100 */
+    top: -47.59vh; /* -514px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f5-found {
+    position: absolute;
+    left: 36.20vw; /* 695px / 1920 * 100 */
+    top: -23.33vh; /* -252px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    margin: 0;
+    z-index: 9;
+    width: 31.98vw; /* 614px / 1920 * 100 */
+}
+
+.text-f5-found .medium {
+    font-weight: 500;
+    font-style: normal;
+    font-size: clamp(24px, 2.08vw, 40px);
+    letter-spacing: -0.145vw;
+}
+
+.text-f5-soul {
+    position: absolute;
+    right: 0;
+    top: 18.33vh; /* 198px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #F7EDED;
+    margin: 0;
+    text-align: right;
+    transform: translateX(-100%);
+    z-index: 9;
+}
+
+.text-f5-stretched {
+    position: absolute;
+    right: 0;
+    top: 30.93vh; /* 334px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    margin: 0;
+    text-align: right;
+    transform: translateX(-100%);
+    padding-right: 83.91vw; /* 1611px / 1920 * 100 */
+    z-index: 9;
+}
+
+.text-f5-stretched em {
+    font-style: italic;
+}
+
+.text-f5-where {
+    position: absolute;
+    right: 0;
+    top: 43.52vh; /* 470px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-size: clamp(24px, 2.08vw, 40px);
+    letter-spacing: -0.145vw;
+    color: #E5E7DA;
+    margin: 0;
+    text-align: right;
+    transform: translateX(-100%);
+    padding-right: 83.91vw; /* 1611px / 1920 * 100 */
+    z-index: 9;
+}
+
+.text-f5-where .medium {
+    font-weight: 500;
+    line-height: 1.667;
+}
+
+.text-f5-where .highlight {
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+}
+
+/* ===== FRAME 6 AREA TEXT ===== */
+.text-f6-soul {
+    position: absolute;
+    left: 50%;
+    top: 450vh;
+    transform: translateX(-50%);
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    text-align: center;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f6-law {
+    position: absolute;
+    left: 50%;
+    top: calc(450vh + 16.20vh); /* 175px / 1080 * 100 */
+    transform: translateX(-50%);
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #E5E7DA;
+    text-align: center;
+    margin: 0;
+    padding-left: 23.91vw; /* 459px / 1920 * 100 */
+    z-index: 9;
+}
+.text-f4b-my {
+    position: absolute;
+    left: 50%;
+    top: calc(450vh + 32.41vh); /* 350px / 1080 * 100 */
+    transform: translateX(-50%);
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    padding-left: 40.47vw; /* 777px / 1920 * 100 */
+    z-index: 9;
+    text-align: center;
+}
+
+.text-f6-time {
+    position: absolute;
+    left: 50%;
+    top: calc(450vh + 48.61vh); /* 525px / 1080 * 100 */
+    transform: translateX(-50%);
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    text-align: center;
+    margin: 0;
+    mix-blend-mode: exclusion;
+    padding-left: 72.71vw; /* 1396px / 1920 * 100 */
+    z-index: 9;
+}
+
+.text-f6-caressing {
+    position: absolute;
+    left: 16.82vw; /* 323px / 1920 * 100 */
+    top: calc(450vh + 64.81vh); /* 700px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    width: 58.33vw; /* 1120px / 1920 * 100 */
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f6-language {
+    position: absolute;
+    left: 44.58vw; /* 856px / 1920 * 100 */
+    top: calc(450vh + 81.76vh); /* 883px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    width: 58.33vw; /* 1120px / 1920 * 100 */
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f6-children {
+    position: absolute;
+    left: 50vw; /* 960px / 1920 * 100 */
+    top: calc(450vh + 98.70vh); /* 1066px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    width: 58.33vw; /* 1120px / 1920 * 100 */
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f6-centred {
+    position: absolute;
+    left: calc(50% - 28.28vw); /* 543px / 1920 * 100 */
+    top: calc(450vh + 122.96vh); /* 1328px / 1080 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    z-index: 9;
+}
+
+/* ===== FRAME 2A+1B: NEW TEXT ELEMENTS ===== */
+.text-f2-autumn {
+    position: absolute;
+    left: 16.68vw; /* 320.33px / 1920 * 100 */
+    top: calc(100vh + 51.85vh); /* 998px from frame 2 start */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px); /* 55px */
+    line-height: 1.010; /* 55.556px / 55px */
+    letter-spacing: -0.052vw; /* -1px */
+    color: #FFFFFF;
+    margin: 0;
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f2-knees {
+    position: absolute;
+    left: 29.81vw; /* 572.33px / 1920 * 100 */
+    top: calc(100vh + 61.20vh); /* 1178px from frame 2 start */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px); /* 55px */
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FFFFFF;
+    margin: 0;
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f2-stood {
+    position: absolute;
+    left: 50.12vw; /* 962.33px / 1920 * 100 */
+    top: calc(100vh + 70.83vh); /* 1363px from frame 2 start */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FFFFFF;
+    margin: 0;
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f2-without {
+    position: absolute;
+    left: 69.97vw; /* 1343.33px / 1920 * 100 */
+    top: calc(100vh + 80.19vh); /* 1543px from frame 2 start */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FFFFFF;
+    margin: 0;
+    white-space: pre-wrap;
+    z-index: 9;
+}
+
+.text-f5-where {
+    position: absolute;
+    left: 40.80vw; /* 2703.33 - 1956 = 747.33 / 1920 * 100 */
+    top: calc(100vh + 13.24vh); /* 1407 - 1150 = 257px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f2-nudes {
+    position: absolute;
+    left: 47.59vw; /* 2870.33 - 1956 = 914.33 / 1920 * 100 */
+    top: calc(100vh + 19.44vh); /* 1524 - 1150 = 374px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(36px, 4.17vw, 80px); /* 80px */
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #F7EDED;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f2-nude-number {
+    position: absolute;
+    left: 33.02vw; /* 2590.33 - 1956 = 634.33 / 1920 * 100 */
+    top: calc(100vh + 32.87vh); /* 1782 - 1150 = 632px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(30px, 3.13vw, 60px); /* 60px for bold italic, 55px for regular */
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #F7EDED;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f2-nude-number .highlight-white {
+    color: #F7EDED;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(30px, 3.13vw, 60px);
+}
+
+.text-f2-nude-number .highlight-red {
+    color: #BB0009;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(30px, 3.13vw, 60px);
+}
+
+.text-f2-nude-number .regular {
+    font-weight: 500;
+    font-style: normal;
+    font-size: clamp(28px, 2.86vw, 55px);
+}
+
+.text-f2-stands {
+    position: absolute;
+    left: 62.39vw; /* 3154.33 - 1956 = 1198.33 / 1920 * 100 */
+    top: calc(100vh + 46.02vh); /* 2035 - 1150 = 885px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f2-not-enough {
+    position: absolute;
+    left: 4.60vw; /* 2044.33 - 1956 = 88.33 / 1920 * 100 */
+    top: calc(100vh + 105.24vh); /* 3173 - 1150 = 2023px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #F7EDED;
+    margin: 0;
+    z-index: 9;
+}
+
+.text-f2-not-enough .highlight-red {
+    color: #BB0009;
+}
+
+.text-f2-not-enough .regular {
+    color: #F7EDED;
+}
+
+.text-f2-five-years {
+    position: absolute;
+    left: 62.39vw; /* 3154.33 - 1956 = 1198.33 / 1920 * 100 */
+    top: calc(100vh + 112.78vh); /* 3318 - 1150 = 2168px / 1920 * 100 */
+    font-family: 'EB Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 2.86vw, 55px);
+    line-height: 1.010;
+    letter-spacing: -0.052vw;
+    color: #FDFFF1;
+    margin: 0;
+    z-index: 9;
+}
+
+/* ===== FRAME 7: THE END ===== */
+.text-f7-end {
+    position: absolute;
+    left: 70.42vw; /* 1352px / 1920 * 100 */
+    top: calc(450vh + 300vh);
+    font-family: 'EB Garamond', serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(24px, 2.08vw, 40px);
+    line-height: 1.389;
+    letter-spacing: -0.145vw;
+    color: #BB0009;
+    margin: 0;
+    z-index: 9;
+}
+
+/* ===== TEXTURE OVERLAYS ===== */
+#texture-overlay-1 {
+    position: absolute;
+    top: 450vh;
+    left: 0;
+    width: 208.85vw; /* 4010px / 1920 * 100 */
+    height: 495.37vh; /* 5350px / 1080 * 100 */
+    background-image: url(images/texture-overlay-1.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    mix-blend-mode: lighten;
+    opacity: 0.329;
+    z-index: 6;
+}
+
+#texture-overlay-2 {
+    position: absolute;
+    top: 450vh;
+    left: -7.86vw; /* -151px / 1920 * 100 */
+    width: 132.45vw; /* 2543px / 1920 * 100 */
+    height: 313.70vh; /* 3388px / 1080 * 100 */
+    background-image: url(images/texture-overlay-2.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    mix-blend-mode: color-dodge;
+    opacity: 0.169;
+    z-index: 6;
+}

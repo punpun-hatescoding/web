@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Poem</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+    <div id="outerframe"></div>
+    <div id="innerframe"></div>
+    <div id="redframe"></div>
+    <div id="title"></div>
+    <div class="frame1-container flashlight-wrapper">
+        <div id="scene-a">
+            <div id="window"></div>
+            <div id="main-char" onclick="triggerSceneSwap()">
+            </div>
+            <div id="animated-curtain"></div>
+            <div id="mist"></div>
+            <div id="lighting"></div>
+        </div>
+        <div id="scene-b" class="hidden">
+            <div id="main-char-f1b"></div>
+            <div id="windows-f1b" style="filter: grayscale(100%);"></div>
+        </div>
+    </div>
+    <div id="overlay"></div>
+    <div id="flashlight-wrapper">
+    </div>
+    </div>
+    <div class="frame2345-container">
+       <div id="ambience"></div>
+       <div id="main-heart"></div>
+       <div id="hand-holding"></div>
+       
+       <!-- Frame 2a+1b: New text elements -->
+       <p class="text-f2-autumn">Autumn had begun,</p>
+       <p class="text-f2-knees">my knees were cold inside my clothes.</p>
+       <p class="text-f2-stood">He stood in my living room and spoke</p>
+       <p class="text-f2-without">without looking at me.</p>
+       <p class="text-f2-not-enough"><span class="highlight-red">Not enough</span><span class="regular"> spin on it,</span></p>
+       <p class="text-f2-five-years">he said of our five years of love.</p>
+       
+       <!-- Frame 4b: Hand images and text -->
+       <div class="frame4b-content">
+           <p class="text-f4-yes">YES,</p>
+           <p class="text-f4-began">I said as I began to</p>
+           <p class="text-f4-remove">REMOVE</p>
+           <p class="text-f4-my">my</p>
+           <p class="text-f4-clothes">CLOTHES.</p>
+       </div>
+       
+       <!-- Frame 5: Couple, roots and text -->
+       <div class="frame5-content">
+           <div id="the-couple"></div>
+           <div id="roots"></div>
+           <p class="text-f5-love">Everything I know about<span class="highlight"> LOVE </span>and its necessities</p>
+           <p class="text-f5-learned">I learned in that one moment</p>
+           <p class="text-f5-found"><span class="medium">when </span><span class="highlight">I found myself</span></p>
+           <p class="text-f5-soul"><span class="highlight">Soul</span> is the place,</p>
+           <p class="text-f5-stretched">stretched like a surface of <em>millstone grit</em> between body and mind,</p>
+           <p class="text-f5-where"><span class="medium">where </span><span class="highlight">such necessity grinds itself out.</span></p>
+       </div>
+       
+       <!-- Text for frame6 area -->
+       <p class="text-f6-soul">Soul is what I kept watch on all that night.</p>
+       <p class="text-f6-law">Law stayed with me.</p>
+       <p class="text-f6-covers">We lay on top of the covers</p>
+       <p class="text-f6-time">as if it weren't really a night of sleep and time</p>
+       <p class="text-f6-caressing">caressing and singing to one another in our</p>
+       <p class="text-f6-language">made-up language</p>
+       <p class="text-f6-children">like the children we used to be.</p>
+       <p class="text-f6-centred">That was a night that centred Heaven and Hell.</p>
+       
+       <!-- Frame 7: The end -->
+       <p class="text-f7-end">The end.</p>
+       
+       <!-- Texture overlays -->
+       <div id="texture-overlay-1"></div>
+       <div id="texture-overlay-2"></div>
+    </div>
+    <script>
+        const wrapper = document.getElementById('flashlight-wrapper');
+
+        function updateFlashlight(event) {
+            const clientX = event.clientX;
+            const clientY = event.clientY;
+         
+            wrapper.style.setProperty('--mouse-x', clientX + 'px');
+            wrapper.style.setProperty('--mouse-y', clientY + 'px'); 
+        }
+        document.addEventListener('mousemove', updateFlashlight);
+    </script>
+   
+    </body>
+</html>
